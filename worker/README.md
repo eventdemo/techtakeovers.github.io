@@ -10,11 +10,10 @@ It loads `system-prompt.md` + `dict.md` from the GitHub Pages site (cached ~10 m
 ## Deploy
 
 ```sh
-npm i -g wrangler
-wrangler login
-cd worker
-wrangler secret put OPENAI_API_KEY   # paste your key when prompted
-wrangler deploy
+npm install
+npx wrangler login
+npx wrangler secret put OPENAI_API_KEY   # paste your key when prompted
+npx wrangler deploy
 ```
 
 `wrangler deploy` prints the Worker URL: `https://api.techtakeovers-api.workers.dev`.
@@ -40,7 +39,7 @@ Rate limit: 10 requests/minute per IP (`[[ratelimits]]`).
 
 ```sh
 cp .dev.vars.example .dev.vars   # then put your real key in .dev.vars
-wrangler dev                     # API on http://localhost:8787
+npx wrangler dev                  # API on http://localhost:8787
 ```
 
 Serve the frontend from the repo root with `python3 -m http.server 8000` and temporarily set `WORKER_URL` to `http://localhost:8787/translate`.
