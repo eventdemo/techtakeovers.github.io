@@ -17,8 +17,8 @@ wrangler secret put OPENAI_API_KEY   # paste your key when prompted
 wrangler deploy
 ```
 
-`wrangler deploy` prints the Worker URL (e.g. `https://techtakeovers-api.<your-subdomain>.workers.dev`).
-Put `<that URL>/translate` in `WORKER_URL` at the top of `../app.js`.
+`wrangler deploy` prints the Worker URL: `https://api.techtakeovers-api.workers.dev`.
+`WORKER_URL` at the top of `../app.js` must be `<that URL>/translate`.
 
 ## Settings (`wrangler.toml` → `[vars]`)
 
