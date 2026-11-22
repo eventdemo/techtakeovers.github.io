@@ -223,7 +223,19 @@
 ### Single point of failure (SPOF)
 - **Definition:** A component whose failure stops the whole system, because nothing else can take over its work.
 - **Example:** "We have one database server with no replica, so it's a single point of failure."
-- **Related:** Blast radius, Load balancer, Availability, Bottleneck
+- **Related:** Redundancy, Failover, Blast radius, Load balancer, Availability, Bottleneck
+
+### Redundancy
+- **Definition:** Running extra copies of a component (servers, databases, network links, data centers) so the system keeps working if one of them fails. Redundancy is what removes a single point of failure.
+- **Example:** "We added a second database replica in another zone for redundancy."
+- **Related:** Failover, Single point of failure, Availability, Horizontal scaling
+- **Not to be confused with:** Failover. Redundancy is *having* a spare; failover is the act of *switching* to it.
+
+### Failover
+- **Definition:** Automatically (or manually) switching traffic or work from a failed component to a redundant standby, so the service keeps running. Usually followed later by a *failback* to the original once it's healthy.
+- **Example:** "When the primary database crashed, failover promoted the replica within 30 seconds."
+- **Related:** Redundancy, Single point of failure, Availability, MTTR, Load balancer
+- **Not to be confused with:** Redundancy, which is the spare capacity that failover switches to.
 
 ### Blast radius
 - **Definition:** The extent of the impact when something fails or a bad change is released: how many users, services or regions are affected.
@@ -335,3 +347,17 @@
 - **Example:** "Pods were evicted because the node ran out of memory."
 - **Related:** Preemption, Pod disruption
 - **Not to be confused with:** Preemption.
+
+## 🗄️ Data Engineering
+
+### Data warehouse
+- **Definition:** A central database optimized for analytics and reporting, holding cleaned, structured data from many sources in a predefined schema (schema-on-write). Examples: Snowflake, BigQuery, Redshift, SAP Datasphere.
+- **Example:** "All dashboards read from the data warehouse, so everyone sees the same revenue numbers."
+- **Related:** Data lake
+- **Not to be confused with:** Data lake, which stores raw data in any format and applies structure only when it's read.
+
+### Data lake
+- **Definition:** A large, low-cost storage repository (e.g. S3, Azure Data Lake Storage) that holds raw data in any format — structured, semi-structured or unstructured — and applies a schema only when the data is read (schema-on-read). A *lakehouse* adds warehouse-like features (tables, transactions, SQL) on top of a data lake.
+- **Example:** "We dump all raw event logs into the data lake and decide later what to analyze."
+- **Related:** Data warehouse
+- **Not to be confused with:** Data warehouse, which stores cleaned, structured data with a schema defined up front.
