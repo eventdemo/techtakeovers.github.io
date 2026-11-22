@@ -6,7 +6,7 @@ An automated process that defines a series of stages or steps to build, test and
 
 * **Continuous Integration (CI)**
 
-The the process of merging code changes, testing them, and building resulting artifacts, as early in the application lifecycle as possible. The intention is to detect any potential issues in the development phase, since this minimizes the effort and cost involved in fixing them. 
+The process of merging code changes, testing them, and building resulting artifacts, as early in the application lifecycle as possible. The intention is to detect any potential issues in the development phase, since this minimizes the effort and cost involved in fixing them. 
 Automated tests validate that code changes haven't introduced errors or regression issues.
 
 * **Continuous Delivery/Deployment (CD)**
@@ -42,13 +42,13 @@ In its simplest form, reliability means the number of successful requests relati
 
 * **Trace**
 
-Path taken by a **single request** (sequence of operations that form a unique transaction) as it propagates throught the system.
+Path taken by a **single request** (sequence of operations that form a unique transaction) as it propagates through the system.
 
 * **Span**
 
-Represents a single operation (a single operation) within a trace (in the context of **tracing**).
+Represents a single operation (unit of work) within a trace.
 
-* Metrics
+* **Metrics**
 
 Numeric measurement over time, basically stream of timestamped values (CPU %, request rate, latency)
 
@@ -76,17 +76,19 @@ Measurement, indicator calculated as the `number_of_good_events/total_no_of_even
 
 SW concept where prioritizing short-term/quick-and-dirty fixes, provides immediate speed, but creates "interest" in the future in the form of increased maintenance, bugs, and slower development speed.
 
+## 🌐 Distributed Systems (CAP theorem)
+
 * **Consistency**
 
-All nodes have the same data at the same time (every read return the most recent write).
+All nodes have the same data at the same time (every read returns the most recent write).
 
 * **Availability**
 
-Every request to a non-failing node gets a response (thpugh it may not contain the latest data).
+Every request to a non-failing node gets a response (though it may not contain the latest data).
 
 * **Partition tolerance**
 
-The system keeps operating even when the network frop between nodes.
+The system keeps operating even when the network drops or delays messages between nodes.
 
 
 ## 👾 Kubernetes
@@ -121,8 +123,8 @@ The core component that maintains the desired state for watched resources, by en
 
 * **Service mesh**
 
-Dedicated infrastructure layer built right into an app, which enables service-to-service communication, e.g. Istio, Linkerd.
-Service meshes address this new set of challenges by managing traffic (communication) between services and adding reliability, observability, and security features uniformly across all services.
+Dedicated infrastructure layer, separate from the application code (typically sidecar proxies), which handles service-to-service communication, e.g. Istio, Linkerd.
+Service meshes manage traffic (communication) between services and adding reliability, observability, and security features uniformly across all services.
 
 * **Service Discovery**
 
@@ -156,14 +158,14 @@ Standard for exposing arbitrary block and file storage systems to containerized 
 
 Kubernetes contacts kubelet to launch a pod, subsequently the kubelet communicates with different container runtimes via CRI (using gRPC API calls)
 
-* Pod Disruption
+* **Pod Disruption**
 
 The process of terminating Pods either voluntarily or involuntarily.
 
-* Preemption
+* **Preemption**
 
 The process of terminating Pods with LOWER Priority so that Pods with HIGHER Priority can schedule on Nodes.
 
-* Eviction
+* **Eviction**
 
 The process of terminating one or more Pods on Nodes.
