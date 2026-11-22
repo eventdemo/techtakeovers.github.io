@@ -46,6 +46,47 @@
 - **Example:** "With GitOps, rolling back is just reverting a commit."
 - **Related:** Infrastructure as Code (IaC), Reconciliation loop
 
+### Rollback
+- **Definition:** Returning a system to its previous known-good version after a bad release or change.
+- **Example:** "Error rates spiked after the deploy, so we rolled back to yesterday's version."
+- **Related:** Canary deployment, Blue-green deployment, Feature flag, MTTR
+- **Not to be confused with:** Roll forward, which fixes the problem by shipping a new version instead of reverting.
+
+### Canary deployment
+- **Definition:** A release strategy where a new version is first rolled out to a small share of users or servers, monitored, and then gradually expanded if healthy (or rolled back if not).
+- **Example:** "The canary got 5% of traffic for an hour before we rolled it out to everyone."
+- **Related:** Blue-green deployment, Rollback, Feature flag, Blast radius
+- **Not to be confused with:** Blue-green deployment, which switches all traffic at once between two full environments.
+
+### Blue-green deployment
+- **Definition:** A release strategy with two identical production environments: one (blue) serves live traffic while the new version is deployed to the other (green). Traffic is then switched to green all at once, and switching back is an instant rollback.
+- **Example:** "With blue-green, rollback is just pointing the load balancer back to blue."
+- **Related:** Canary deployment, Rollback, Load balancer
+- **Not to be confused with:** Canary deployment, which shifts traffic gradually.
+
+### Feature flag
+- **Definition:** A configuration switch that turns a feature on or off at runtime without deploying new code, often for specific users or a percentage of traffic. Separates *deploying* code from *releasing* a feature.
+- **Example:** "The new checkout is deployed but hidden behind a feature flag until marketing is ready."
+- **Related:** Canary deployment, Rollback
+- **Also known as:** Feature toggle.
+
+### Flaky test
+- **Definition:** An automated test that sometimes passes and sometimes fails on the same code, usually because of timing, ordering, shared state or external dependencies.
+- **Example:** "The build is red again, but it's just that flaky login test; re-running it passes."
+- **Related:** Continuous Integration (CI), Race condition
+
+### Toil
+- **Definition:** Manual, repetitive, automatable operational work that scales with the size of the service and brings no lasting value (a term from Google's SRE practice).
+- **Example:** "Restarting the worker by hand every morning is toil; let's automate it."
+- **Related:** Technical debt, On-call
+- **Not to be confused with:** Technical debt, which is a cost built into the code or design rather than recurring manual work.
+
+### Technical debt
+- **Definition:** The future cost created by choosing quick or easy solutions now instead of better ones. Like financial debt, it accumulates "interest" in the form of extra maintenance, bugs and slower development.
+- **Example:** "We skipped tests to hit the deadline, and now that technical debt slows down every change."
+- **Related:** Toil
+- **Not to be confused with:** Toil, which is recurring manual work rather than a cost built into the code or design.
+
 ## 🔭 Monitoring and Observability
 
 ### Reliability
@@ -69,6 +110,23 @@
 - **Definition:** Numeric measurements collected over time, i.e. a stream of timestamped values (e.g. CPU %, request rate, latency).
 - **Example:** "The metrics show memory usage climbing steadily until the crash."
 - **Related:** USE method, RED method, SLI
+
+### Latency
+- **Definition:** The time it takes to handle a single request or operation, from start to finish. Usually reported as percentiles (e.g. p50, p99) rather than averages.
+- **Example:** "p99 latency is 2 seconds, so 1 in 100 users waits at least that long."
+- **Related:** Throughput, Bottleneck, RED method
+- **Not to be confused with:** Throughput. Latency is *how long one request takes*; throughput is *how many requests are handled per unit of time*.
+
+### Throughput
+- **Definition:** The amount of work a system handles per unit of time (e.g. requests per second, messages per minute).
+- **Example:** "After adding workers, throughput went from 500 to 2,000 jobs per minute."
+- **Related:** Latency, Bottleneck, Horizontal scaling
+- **Not to be confused with:** Latency.
+
+### Bottleneck
+- **Definition:** The component that limits the performance or capacity of the whole system, so improving anything else has little effect.
+- **Example:** "The database is the bottleneck; adding more web servers won't help."
+- **Related:** Latency, Throughput, USE method, Single point of failure
 
 ### USE method (Utilization, Saturation, Errors)
 - **Definition:** A monitoring methodology for **infrastructure resources** (CPU, memory, disk, network): for each resource, check its utilization, saturation and errors. Introduced by Brendan Gregg.
@@ -100,11 +158,25 @@
 - **Related:** SLO, SLA, Metrics
 - **Not to be confused with:** SLO (the target) or SLA (the contract).
 
-### Technical debt
-- **Definition:** The future cost created by choosing quick or easy solutions now instead of better ones. Like financial debt, it accumulates "interest" in the form of extra maintenance, bugs and slower development.
-- **Example:** "We skipped tests to hit the deadline, and now that technical debt slows down every change."
+## 🚨 Incident Management
 
-## 🌐 Distributed Systems (CAP theorem)
+### On-call
+- **Definition:** A rotation where an engineer is responsible, for a set period, for responding to alerts and incidents in production, including outside working hours.
+- **Example:** "I'm on-call this week, so I'll get paged if the API goes down."
+- **Related:** MTTR, Postmortem, Toil
+
+### MTTR (Mean Time to Recovery)
+- **Definition:** The average time it takes to restore service after an incident, from when it starts (or is detected) until it is resolved. Sometimes expanded as Mean Time to Repair/Resolve.
+- **Example:** "Faster rollbacks cut our MTTR from an hour to ten minutes."
+- **Related:** On-call, Rollback, Postmortem, Reliability
+
+### Postmortem
+- **Definition:** A written review after an incident describing what happened, its impact, the root cause(s) and follow-up actions to prevent it recurring. Usually **blameless**: it focuses on systems and processes, not on who made a mistake.
+- **Example:** "The postmortem found that a missing alert delayed detection by 40 minutes."
+- **Related:** On-call, MTTR, Blast radius
+- **Also known as:** Incident review, retrospective.
+
+## 🌐 Distributed Systems
 
 ### Consistency
 - **Definition:** In the CAP theorem, every read receives the most recent write, so all nodes see the same data at the same time.
@@ -120,6 +192,48 @@
 - **Definition:** In the CAP theorem, the system keeps operating even when the network drops or delays messages between nodes. Since partitions can't be avoided in distributed systems, the real trade-off during a partition is between consistency and availability.
 - **Example:** "When the link between data centers went down, the system stayed up thanks to partition tolerance."
 - **Related:** Consistency, Availability
+
+### Horizontal scaling
+- **Definition:** Increasing capacity by adding more machines or instances that share the load (scaling *out*).
+- **Example:** "During the sale we scaled horizontally from 3 to 12 API pods."
+- **Related:** Vertical scaling, Load balancer, Throughput
+- **Not to be confused with:** Vertical scaling, which makes a single machine bigger.
+
+### Vertical scaling
+- **Definition:** Increasing capacity by giving a single machine more resources, such as CPU or memory (scaling *up*). Simpler, but limited by the largest machine available and often requires a restart.
+- **Example:** "We scaled the database vertically to a 64 GB instance."
+- **Related:** Horizontal scaling, Bottleneck
+- **Not to be confused with:** Horizontal scaling.
+
+### Load balancer
+- **Definition:** A component that distributes incoming requests across multiple instances of a service, and stops sending traffic to unhealthy ones.
+- **Example:** "The load balancer spreads traffic across the three web servers."
+- **Related:** Horizontal scaling, Blue-green deployment, Single point of failure
+
+### Rate limiting
+- **Definition:** Restricting how many requests a client can make in a given time window, to protect a service from overload or abuse. Excess requests are rejected (often with HTTP 429) or delayed.
+- **Example:** "The API is rate limited to 100 requests per minute per key."
+- **Related:** Throughput, Load balancer
+
+### Caching
+- **Definition:** Storing copies of frequently used data in a faster location (memory, CDN, browser) so later requests can be served without recomputing or refetching it. The main difficulty is keeping cached data from going stale (cache invalidation).
+- **Example:** "We cache product pages in Redis, which cut database load in half."
+- **Related:** Latency, Bottleneck, Consistency
+
+### Single point of failure (SPOF)
+- **Definition:** A component whose failure stops the whole system, because nothing else can take over its work.
+- **Example:** "We have one database server with no replica, so it's a single point of failure."
+- **Related:** Blast radius, Load balancer, Availability, Bottleneck
+
+### Blast radius
+- **Definition:** The extent of the impact when something fails or a bad change is released: how many users, services or regions are affected.
+- **Example:** "Deploying region by region limits the blast radius of a bad release."
+- **Related:** Canary deployment, Single point of failure, Postmortem
+
+### Race condition
+- **Definition:** A bug where the result depends on the unpredictable timing or order of concurrent operations, e.g. two processes updating the same data at the same time.
+- **Example:** "Two users bought the last ticket because of a race condition in the stock check."
+- **Related:** Flaky test, Consistency
 
 ## 👾 Kubernetes
 
