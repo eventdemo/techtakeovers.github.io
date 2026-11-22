@@ -291,6 +291,13 @@ function renderResult(data) {
     }
   }
 
+  // No dictionary term applied: say so clearly instead of looking like nothing happened.
+  const noDictTerms = !found.some((f) => f.entry);
+  $("status").textContent = noDictTerms
+    ? "✅ No dictionary terms needed: your text is already in engineering language, or it's outside the topics the dictionary covers. It was only polished."
+    : "";
+  $("status").classList.toggle("hidden", !noDictTerms);
+
   $("note").textContent = data.note || "";
   $("note").classList.toggle("hidden", !data.note);
   $("result").classList.remove("hidden");
