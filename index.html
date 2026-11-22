@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>TechTakeovers</title>
+  <meta name="description" content="Translate everyday thoughts into precise software engineering language.">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header class="top">
+    <div class="brand">
+      <h1>TechTakeovers</h1>
+      <p class="tagline">Say it in plain words. Get it in engineer.</p>
+    </div>
+    <div class="stats">
+      <span id="streak" class="pill" title="Days in a row you've translated something">🔥 0</span>
+      <span id="progress-pill" class="pill" title="Dictionary terms unlocked">🧠 0 / 0</span>
+    </div>
+  </header>
+
+  <main>
+    <section class="card">
+      <label for="input" class="label">What's going on?</label>
+      <textarea id="input" maxlength="1000" rows="4"
+        placeholder="e.g. Every time we push the new version, the site gets super slow, so we go back to the old one."></textarea>
+      <div class="row">
+        <div id="examples" class="chips" aria-label="Example sentences"></div>
+      </div>
+      <div class="row space-between">
+        <span id="counter" class="muted">0 / 1000</span>
+        <button id="translate" class="primary">Translate <kbd>⌘↵</kbd></button>
+      </div>
+    </section>
+
+    <section id="result" class="card hidden" aria-live="polite">
+      <div class="row space-between">
+        <span class="label">In engineer</span>
+        <button id="copy" class="ghost">Copy</button>
+      </div>
+      <p id="output" class="output"></p>
+      <div id="terms" class="chips"></div>
+      <p id="note" class="note hidden"></p>
+    </section>
+
+    <p id="error" class="error hidden" role="alert"></p>
+
+    <section class="card">
+      <span class="label">Term of the day</span>
+      <button id="totd" class="totd"></button>
+    </section>
+
+    <section class="card">
+      <div class="row space-between">
+        <span class="label">Your vocabulary</span>
+        <span id="progress-text" class="muted"></span>
+      </div>
+      <div class="bar"><div id="bar-fill" class="bar-fill"></div></div>
+      <div id="vocab"></div>
+    </section>
+  </main>
+
+  <dialog id="term-dialog">
+    <form method="dialog">
+      <p id="d-section" class="muted"></p>
+      <h2 id="d-title"></h2>
+      <dl id="d-fields"></dl>
+      <button class="primary">Got it</button>
+    </form>
+  </dialog>
+
+  <div id="toast" class="toast hidden" role="status"></div>
+
+  <script src="app.js"></script>
+</body>
+</html>
