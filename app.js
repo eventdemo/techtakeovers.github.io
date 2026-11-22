@@ -229,6 +229,20 @@ function initShowcase() {
   const step = (d) => { scIndex = (scIndex + d + SHOWCASE.length) % SHOWCASE.length; renderShowcase(); };
   $("sc-prev").addEventListener("click", () => step(-1));
   $("sc-next").addEventListener("click", () => step(1));
+  // Swipe left/right on the card to change example.
+  const card = document.querySelector(".showcase");
+  let startX = null, startY = null;
+  card.addEventListener("touchstart", (e) => {
+    startX = e.touches[0].clientX;
+    startY = e.touches[0].clientY;
+  }, { passive: true });
+  card.addEventListener("touchend", (e) => {
+    if (startX == null) return;
+    const dx = e.changedTouches[0].clientX - startX;
+    const dy = e.changedTouches[0].clientY - startY;
+    startX = null;
+    if (Math.abs(dx) > 50 && Math.abs(dx) > Math.abs(dy) * 1.5) step(dx < 0 ? 1 : -1);
+  }, { passive: true });
   $("sc-try").addEventListener("click", () => {
     const input = $("input");
     input.value = SHOWCASE[scIndex].plain;
@@ -333,6 +347,7 @@ function initUI() {
 
 async function init() {
   initUI();
+  initShowcase(); // works immediately; terms get highlighted once dict.md loads
   try {
     const res = await fetch("dict.md");
     if (!res.ok) throw new Error(res.status);
@@ -345,7 +360,7 @@ async function init() {
   renderStats();
   renderVocab();
   renderTermOfTheDay();
-  initShowcase();
+  renderShowcase();
 }
 
 init();

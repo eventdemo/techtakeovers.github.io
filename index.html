@@ -5,7 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TechTakeovers</title>
   <meta name="description" content="Translate everyday thoughts into precise software engineering language.">
-  <link rel="stylesheet" href="style.css">
+  <!-- Bump ?v= on every change so browsers don't mix cached old files with new ones -->
+  <link rel="stylesheet" href="style.css?v=2">
 </head>
 <body>
   <header class="top">
@@ -49,11 +50,11 @@
       <label for="input" class="label">What's going on?</label>
       <textarea id="input" maxlength="1000" rows="4"
         placeholder="e.g. Every time we push the new version, the site gets super slow, so we go back to the old one."></textarea>
-      <div class="row">
+      <div class="examples-row">
         <span class="muted">Or try one:</span>
         <div id="examples" class="chips" aria-label="Example sentences"></div>
       </div>
-      <div class="row space-between">
+      <div class="row space-between action-row">
         <span id="counter" class="muted">0 / 1000</span>
         <button id="translate" class="primary">Translate <kbd>⌘↵</kbd></button>
       </div>
@@ -97,6 +98,6 @@
 
   <div id="toast" class="toast hidden" role="status"></div>
 
-  <script src="app.js"></script>
+  <script src="app.js?v=2"></script>
 </body>
 </html>
