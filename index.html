@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>TechAlt</title>
+  <title>TechTakeovers</title>
   <meta name="description" content="Translate everyday thoughts into precise software engineering language.">
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header class="top">
     <div class="brand">
-      <h1>TechAlt</h1>
-      <p class="tagline">Say it in plain words. Get it in engineer.</p>
+      <h1>TechTakeovers</h1>
+      <p class="tagline">Describe a tech problem in plain words. Get it back in the language engineers use, and learn each term as you go.</p>
     </div>
     <div class="stats">
       <span id="streak" class="pill" title="Days in a row you've translated something">🔥 0</span>
@@ -20,11 +20,37 @@
   </header>
 
   <main>
+    <section class="card showcase" aria-label="How it works">
+      <div class="row space-between">
+        <span class="label">How it works</span>
+        <div class="pager">
+          <button id="sc-prev" class="ghost" aria-label="Previous example">‹</button>
+          <span id="sc-pos" class="muted"></span>
+          <button id="sc-next" class="ghost" aria-label="Next example">›</button>
+        </div>
+      </div>
+      <div class="sc-pair">
+        <div>
+          <span class="sc-tag">You say</span>
+          <p id="sc-plain" class="sc-plain"></p>
+        </div>
+        <div>
+          <span class="sc-tag accent">Engineer says</span>
+          <p id="sc-tech" class="sc-tech"></p>
+        </div>
+      </div>
+      <div class="row space-between">
+        <span class="muted">Tap a highlighted term to see what it means.</span>
+        <button id="sc-try" class="ghost">Try it ↓</button>
+      </div>
+    </section>
+
     <section class="card">
       <label for="input" class="label">What's going on?</label>
       <textarea id="input" maxlength="1000" rows="4"
         placeholder="e.g. Every time we push the new version, the site gets super slow, so we go back to the old one."></textarea>
       <div class="row">
+        <span class="muted">Or try one:</span>
         <div id="examples" class="chips" aria-label="Example sentences"></div>
       </div>
       <div class="row space-between">

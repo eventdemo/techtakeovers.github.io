@@ -145,6 +145,16 @@ button { font: inherit; cursor: pointer; }
   text-underline-offset: 3px;
 }
 
+.showcase .pager { display: flex; align-items: center; gap: 6px; }
+.showcase .pager .ghost { padding: 0 10px; font-size: 1.1rem; line-height: 1.6; }
+.sc-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+@media (max-width: 560px) { .sc-pair { grid-template-columns: 1fr; } }
+.sc-pair > div { border: 1px solid var(--border); border-radius: 10px; padding: 12px; }
+.sc-tag { font-size: 0.75rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); }
+.sc-tag.accent { color: var(--accent); }
+.sc-plain { margin: 6px 0 0; font-style: italic; }
+.sc-tech { margin: 6px 0 0; }
+
 .note { color: var(--muted); font-size: 0.9rem; margin: 12px 0 0; }
 .error { color: var(--error); margin: 12px 4px 0; }
 

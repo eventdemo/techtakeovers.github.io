@@ -2,13 +2,36 @@
 // Set this to your deployed Worker URL (see worker/README.md).
 const WORKER_URL = "https://api.techtakeovers-api.workers.dev/translate";
 
+// Clickable starters: each maps to at least one dictionary term.
 const EXAMPLES = [
-  "It works on my machine but breaks in prod",
-  "The site gets super slow when lots of people use it at once",
-  "We had to go back to the old version after the update broke checkout",
-  "That test fails randomly and passes when I re-run it",
-  "If that one server dies, everything goes down",
-  "Every morning someone restarts the worker by hand",
+  "The site gets really slow when lots of people use it at the same time",
+  "We had to go back to the old version because the update broke checkout",
+  "That test fails randomly and passes when I run it again",
+  "If that one database dies, the whole app goes down",
+  "Someone restarts the server by hand every morning",
+  "We promised customers 99.9% uptime or they get money back",
+  "Let's give the new version to 5% of users first and see if it holds up",
+  "Two people managed to buy the last ticket at the same time",
+];
+
+// Pre-written before/after pairs for the "How it works" card (no API call).
+// `tech` must contain the dictionary term names so they get highlighted.
+const SHOWCASE = [
+  {
+    plain: "The update broke checkout for everyone, so we went back to the old version.",
+    tech: "The release caused a checkout regression with a blast radius covering all users, so we did a rollback to the previous version.",
+    terms: ["Blast radius", "Rollback"],
+  },
+  {
+    plain: "If that one database dies, the whole app goes down.",
+    tech: "The database is a single point of failure: if it fails, the availability of the entire application is lost.",
+    terms: ["Single point of failure", "Availability"],
+  },
+  {
+    plain: "That test fails randomly, and when I run it again it passes.",
+    tech: "It's a flaky test: it fails non-deterministically and passes on re-run.",
+    terms: ["Flaky test"],
+  },
 ];
 
 const STORAGE_KEY = "techtakeovers:v1";
@@ -173,34 +196,56 @@ function renderTermOfTheDay() {
   btn.onclick = () => showTerm(t);
 }
 
+// Writes `text` into `container`, turning mentions of the given dictionary entries into clickable terms.
+function renderHighlighted(container, text, entries) {
+  container.replaceChildren();
+  const names = [];
+  for (const entry of entries) for (const a of aliases(entry.name)) names.push({ a, entry });
+  if (!names.length) { container.textContent = text; return; }
+  names.sort((x, y) => y.a.length - x.a.length);
+  const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  const re = new RegExp(`\\b(${names.map((n) => esc(n.a)).join("|")})\\b`, "gi");
+  let last = 0;
+  for (const m of text.matchAll(re)) {
+    container.append(text.slice(last, m.index));
+    const hit = names.find((n) => norm(n.a) === norm(m[0]));
+    const b = el("button", { className: "term", title: "See definition" }, m[0]);
+    b.addEventListener("click", () => showTerm(hit.entry));
+    container.append(b);
+    last = m.index + m[0].length;
+  }
+  container.append(text.slice(last));
+}
+
+// ---------- "How it works" showcase ----------
+let scIndex = 0;
+function renderShowcase() {
+  const ex = SHOWCASE[scIndex];
+  $("sc-plain").textContent = `“${ex.plain}”`;
+  renderHighlighted($("sc-tech"), ex.tech, ex.terms.map(findTerm).filter(Boolean));
+  $("sc-pos").textContent = `${scIndex + 1} / ${SHOWCASE.length}`;
+}
+function initShowcase() {
+  const step = (d) => { scIndex = (scIndex + d + SHOWCASE.length) % SHOWCASE.length; renderShowcase(); };
+  $("sc-prev").addEventListener("click", () => step(-1));
+  $("sc-next").addEventListener("click", () => step(1));
+  $("sc-try").addEventListener("click", () => {
+    const input = $("input");
+    input.value = SHOWCASE[scIndex].plain;
+    input.dispatchEvent(new Event("input"));
+    input.focus();
+    input.scrollIntoView({ behavior: "smooth", block: "center" });
+  });
+  renderShowcase();
+}
+
 // ---------- Translation ----------
 function renderResult(data) {
   const found = data.terms_used
     .map((u) => ({ ...u, entry: u.in_dictionary ? findTerm(u.term) : null }));
 
   // Highlight dictionary terms inside the technical version.
-  const out = $("output");
-  out.replaceChildren();
-  const names = [];
-  for (const f of found) if (f.entry) for (const a of aliases(f.entry.name)) names.push({ a, entry: f.entry });
-  names.sort((x, y) => y.a.length - x.a.length);
-  const text = data.technical_version;
-  if (names.length) {
-    const esc = (s) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
-    const re = new RegExp(`\\b(${names.map((n) => esc(n.a)).join("|")})\\b`, "gi");
-    let last = 0;
-    for (const m of text.matchAll(re)) {
-      out.append(text.slice(last, m.index));
-      const hit = names.find((n) => norm(n.a) === norm(m[0]));
-      const b = el("button", { className: "term", title: "See definition" }, m[0]);
-      b.addEventListener("click", () => showTerm(hit.entry));
-      out.append(b);
-      last = m.index + m[0].length;
-    }
-    out.append(text.slice(last));
-  } else {
-    out.textContent = text;
-  }
+  renderHighlighted($("output"), data.technical_version, found.map((f) => f.entry).filter(Boolean));
 
   // Term chips + unlocks.
   const chips = $("terms");
@@ -300,6 +345,7 @@ async function init() {
   renderStats();
   renderVocab();
   renderTermOfTheDay();
+  initShowcase();
 }
 
 init();
