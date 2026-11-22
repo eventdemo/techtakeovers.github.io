@@ -5,9 +5,9 @@ compatibility_date = "2025-06-01"
 # Non-secret settings. The API key is a secret: `wrangler secret put OPENAI_API_KEY`
 [vars]
 # Where system-prompt.md and dict.md are published (your GitHub Pages site).
-CONTENT_BASE_URL = "https://techjargon.github.io/"
+CONTENT_BASE_URL = "https://techalt.github.io/"
 # Comma-separated list of sites allowed to call the API.
-ALLOWED_ORIGINS = "https://techjargon.github.io,http://localhost:8000,http://127.0.0.1:8000"
+ALLOWED_ORIGINS = "https://techalt.github.io,http://localhost:8000,http://127.0.0.1:8000"
 # OpenAI model; change without touching code.
 MODEL = "gpt-6-luna"
 # Only for reasoning models (e.g. gpt-5 family). Remove for non-reasoning models.
