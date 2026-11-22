@@ -1,6 +1,6 @@
 // TechTakeovers frontend
 // Set this to your deployed Worker URL (see worker/README.md).
-const WORKER_URL = "https://techtakeovers-api.YOUR-SUBDOMAIN.workers.dev/translate";
+const WORKER_URL = "https://api.techtakeovers-api.workers.dev/translate";
 
 const EXAMPLES = [
   "It works on my machine but breaks in prod",
