@@ -172,19 +172,6 @@ button { font: inherit; cursor: pointer; touch-action: manipulation; }
 .note { color: var(--muted); font-size: 0.9rem; margin: 12px 0 0; }
 .error { color: var(--error); margin: 12px 4px 0; }
 
-.totd {
-  display: block;
-  width: 100%;
-  text-align: left;
-  background: var(--accent-soft);
-  border: 0;
-  border-radius: 10px;
-  padding: 12px;
-  color: var(--text);
-}
-.totd strong { display: block; font-size: 1.05rem; }
-.totd span { color: var(--muted); font-size: 0.9rem; }
-
 .bar { height: 8px; background: var(--locked); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
 .bar-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.4s ease; }
 

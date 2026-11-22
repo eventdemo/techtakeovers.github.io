@@ -135,7 +135,7 @@ function toast(msg) {
   toastTimer = setTimeout(() => t.classList.add("hidden"), 2500);
 }
 
-// ---------- Streak, progress, term of the day ----------
+// ---------- Streak and progress ----------
 function today(offsetDays = 0) {
   const d = new Date();
   d.setDate(d.getDate() + offsetDays);
@@ -181,19 +181,6 @@ function renderVocab() {
     wrap.append(chips);
     box.append(wrap);
   }
-}
-
-function renderTermOfTheDay() {
-  if (!terms.length) return;
-  let h = 0;
-  for (const c of today()) h = (h * 31 + c.charCodeAt(0)) >>> 0;
-  const t = terms[h % terms.length];
-  const btn = $("totd");
-  btn.replaceChildren(el("strong", {}, t.name));
-  const def = el("span");
-  renderInline(t.fields.Definition || "", def);
-  btn.append(def);
-  btn.onclick = () => showTerm(t);
 }
 
 // Writes `text` into `container`, turning mentions of the given dictionary entries into clickable terms.
@@ -359,7 +346,6 @@ async function init() {
   }
   renderStats();
   renderVocab();
-  renderTermOfTheDay();
   renderShowcase();
 }
 
