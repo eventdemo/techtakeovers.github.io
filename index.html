@@ -6,17 +6,21 @@
   <title>TechAlt</title>
   <meta name="description" content="Translate everyday thoughts into precise software engineering language.">
   <!-- Bump ?v= on every change so browsers don't mix cached old files with new ones -->
-  <link rel="stylesheet" href="style.css?v=3">
+  <link rel="stylesheet" href="style.css?v=4">
 </head>
 <body>
   <header class="top">
     <div class="brand">
       <h1>TechAlt</h1>
-      <p class="tagline">Describe a tech problem in plain words. Get it back in the language engineers use, and learn each term as you go.</p>
+      <p class="tagline">Speak fluent Engineering</p>
     </div>
     <div class="stats">
-      <span id="streak" class="pill" title="Days in a row you've translated something">🔥 0</span>
-      <span id="progress-pill" class="pill" title="Dictionary terms unlocked">🧠 0 / 0</span>
+      <span class="pill" title="Days in a row you've translated something">
+        🔥 <strong id="streak">0</strong> <small>day streak</small>
+      </span>
+      <span class="pill" title="Dictionary terms you've come across in translations">
+        🧠 <strong id="progress-pill">0/0</strong> <small>terms learned</small>
+      </span>
     </div>
   </header>
 
@@ -78,7 +82,9 @@
         <span id="progress-text" class="muted"></span>
       </div>
       <div class="bar"><div id="bar-fill" class="bar-fill"></div></div>
+      <input id="vocab-search" class="search" type="search" placeholder="Search terms or definitions…" aria-label="Search vocabulary" autocomplete="off">
       <div id="vocab"></div>
+      <p id="vocab-empty" class="muted hidden">No terms match your search.</p>
     </section>
   </main>
 
@@ -93,6 +99,6 @@
 
   <div id="toast" class="toast hidden" role="status"></div>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

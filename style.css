@@ -60,9 +60,11 @@ h1 { margin: 0; font-size: 1.6rem; letter-spacing: -0.02em; }
   border: 1px solid var(--border);
   border-radius: 999px;
   padding: 4px 12px;
-  font-weight: 600;
   font-size: 0.9rem;
+  white-space: nowrap;
 }
+.pill strong { font-weight: 700; }
+.pill small { color: var(--muted); font-size: 0.78rem; }
 
 main { padding-bottom: 48px; }
 
@@ -175,7 +177,42 @@ button { font: inherit; cursor: pointer; touch-action: manipulation; }
 .bar { height: 8px; background: var(--locked); border-radius: 999px; overflow: hidden; margin-bottom: 12px; }
 .bar-fill { height: 100%; width: 0; background: var(--accent); transition: width 0.4s ease; }
 
-.vocab-section h3 { font-size: 0.9rem; margin: 14px 0 8px; }
+.search {
+  width: 100%;
+  font: inherit;
+  font-size: 16px; /* 16px+ stops iOS from zooming on focus */
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 10px 12px;
+  margin-bottom: 4px;
+}
+.search:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+.vocab-section { border-bottom: 1px solid var(--border); }
+.vocab-section:last-child { border-bottom: 0; }
+.vocab-section summary {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 8px;
+  min-height: 44px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  cursor: pointer;
+  list-style: none;
+}
+.vocab-section summary::-webkit-details-marker { display: none; }
+.vocab-section summary > span:first-child::before {
+  content: "›";
+  display: inline-block;
+  width: 1em;
+  color: var(--muted);
+  transition: transform 0.2s ease;
+}
+.vocab-section[open] summary > span:first-child::before { transform: rotate(90deg); }
+.vocab-section .chips { padding: 0 0 14px; }
 .vocab-term {
   border-radius: 8px;
   padding: 4px 10px;

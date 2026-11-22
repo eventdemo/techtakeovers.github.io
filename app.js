@@ -157,30 +157,57 @@ function renderStats() {
   const known = new Set(terms.map((t) => t.id));
   const unlocked = state.unlocked.filter((id) => known.has(id)).length;
   const pct = terms.length ? Math.round((unlocked / terms.length) * 100) : 0;
-  $("streak").textContent = `🔥 ${currentStreak()}`;
-  $("progress-pill").textContent = `🧠 ${unlocked} / ${terms.length}`;
-  $("progress-text").textContent = `${unlocked} of ${terms.length} terms unlocked`;
+  $("streak").textContent = String(currentStreak());
+  $("progress-pill").textContent = `${unlocked}/${terms.length}`;
+  $("progress-text").textContent = `${unlocked} of ${terms.length} terms learned`;
   $("bar-fill").style.width = `${pct}%`;
+}
+
+// Sections the user expanded; kept across re-renders (e.g. after a translation).
+const openSections = new Set();
+
+function matchesQuery(t, q) {
+  return norm(t.name).includes(q) || norm(t.fields.Definition || "").includes(q);
 }
 
 function renderVocab() {
   const box = $("vocab");
   box.replaceChildren();
+  const q = norm($("vocab-search").value);
   const unlocked = new Set(state.unlocked);
   const sections = [...new Set(terms.map((t) => t.section))];
+  let shown = 0;
+
   for (const section of sections) {
-    const wrap = el("div", { className: "vocab-section" });
-    wrap.append(el("h3", {}, section));
+    const all = terms.filter((x) => x.section === section);
+    const list = q ? all.filter((t) => matchesQuery(t, q)) : all;
+    if (!list.length) continue;
+    shown += list.length;
+
+    const learned = all.filter((t) => unlocked.has(t.id)).length;
+    const details = el("details", { className: "vocab-section" });
+    details.open = q ? true : openSections.has(section);
+    details.addEventListener("toggle", () => {
+      // Ignore toggles caused by search, or from elements already replaced by a re-render.
+      if (!details.isConnected || norm($("vocab-search").value)) return;
+      details.open ? openSections.add(section) : openSections.delete(section);
+    });
+
+    const summary = el("summary");
+    summary.append(el("span", {}, section), el("span", { className: "muted" }, q ? `${list.length} found` : `${learned}/${all.length}`));
+    details.append(summary);
+
     const chips = el("div", { className: "chips" });
-    for (const t of terms.filter((x) => x.section === section)) {
-      const isOpen = unlocked.has(t.id);
-      const b = el("button", { className: "vocab-term" + (isOpen ? "" : " locked") }, (isOpen ? "" : "🔒 ") + t.name);
+    for (const t of list) {
+      const isLearned = unlocked.has(t.id);
+      const b = el("button", { className: "vocab-term" + (isLearned ? "" : " locked") }, (isLearned ? "" : "🔒 ") + t.name);
       b.addEventListener("click", () => showTerm(t));
       chips.append(b);
     }
-    wrap.append(chips);
-    box.append(wrap);
+    details.append(chips);
+    box.append(details);
   }
+  $("vocab-empty").classList.toggle("hidden", !q || shown > 0);
 }
 
 // Writes `text` into `container`, turning mentions of the given dictionary entries into clickable terms.
@@ -312,6 +339,7 @@ function initUI() {
     if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) { e.preventDefault(); translate(); }
   });
   $("translate").addEventListener("click", translate);
+  $("vocab-search").addEventListener("input", renderVocab);
 
   const isMac = /Mac|iPhone|iPad/.test(navigator.platform || navigator.userAgent);
   $("translate").querySelector("kbd").textContent = isMac ? "⌘↵" : "Ctrl+↵";
